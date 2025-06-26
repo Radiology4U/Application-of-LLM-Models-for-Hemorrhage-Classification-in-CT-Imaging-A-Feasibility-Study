@@ -5,24 +5,37 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import cohen_kappa_score
 import textwrap
 from dotenv import load_dotenv
+from matplotlib.patches import Patch
 
 # -------- LOAD ENVIRONMENT VARIABLES --------
 load_dotenv()
-excel_path = os.getenv("EXCEL_PATH", "input_data.xlsx")  # Set in .env or default fallback
+excel_path = os.getenv("EXCEL_PATH", "input_data.xlsx")  # Default path if not in .env
 
-# -------- COMPARISON SETTINGS --------
-#YOU CAN INCLUDE ALL COLUMNS AT ONCE FOR THE PLOT
+# -------- COMPARISON PAIRS --------
 comparisons = [
-    ("Befund der erfahr. Radiologen/Neuroradiologe ohne Anamnese", "Radiologist Prediction"),
-    ("Befund der erfahr. Radiologen/Neuroradiologe mit Anamnese", "Radiologist Prediction"),
-    ("Befund der erfahr. Radiologen/Neuroradiologe mit Anamnese", "Radiologist Prediction")
+    ("Student-1-without-medical history", "Radiologist Prediction"),
+    ("Student-1-with-medical history", "Radiologist Prediction"),
+    ("Student-2-without-medical history", "Radiologist Prediction"),
+    ("Student-2-with-medical history", "Radiologist Prediction"),
+    ("Student-3-without-medical history", "Radiologist Prediction"),
+    ("Student-3-with-medical history", "Radiologist Prediction"),
+    ("Student-4-without-medical history", "Radiologist Prediction"),
+    ("Student-4-with-medical history", "Radiologist Prediction"),
+    ("Resident-1-without-medical history", "Radiologist Prediction"),
+    ("Resident-1-with-medical history", "Radiologist Prediction"),
+    ("Resident-2-without-medical history", "Radiologist Prediction"),
+    ("Resident-2-with-medical history", "Radiologist Prediction"),
+    ("Expert-without-medical history", "Radiologist Prediction"),
+    ("Expert-with-medical history", "Radiologist Prediction"),
+    ("ChatGPT-without-medical history", "Radiologist Prediction"),
+    ("ChatGPT-with-medical history", "Radiologist Prediction"),
 ]
 
-label_set = [1, 2, 3, 4, 5]  # Categories assumed to be encoded as 1–5, possibly multi-label with '+'
+label_set = [1, 2, 3, 4, 5]
 
 # -------- HELPER FUNCTIONS --------
 def to_binary_vector(label_entry, label_set):
-    """Convert a label entry (e.g., '2+4') to a binary vector like [0, 1, 0, 1, 0]."""
+    """Convert label string like '2+3' to binary vector [0,1,1,0,0]."""
     if isinstance(label_entry, str):
         labels = list(map(int, label_entry.split('+')))
     else:
@@ -30,7 +43,7 @@ def to_binary_vector(label_entry, label_set):
     return [1 if lbl in labels else 0 for lbl in label_set]
 
 def compute_weighted_kappa_stats(true_col, pred_col):
-    """Compute average Cohen's Kappa (quadratic-weighted) across all classes."""
+    """Compute average Cohen's Kappa across all binary categories."""
     y_true_bin = np.array([to_binary_vector(val, label_set) for val in true_col])
     y_pred_bin = np.array([to_binary_vector(val, label_set) for val in pred_col])
 
@@ -40,10 +53,8 @@ def compute_weighted_kappa_stats(true_col, pred_col):
         kappas.append(kappa)
     return np.mean(kappas), np.std(kappas)
 
-# -------- LOAD DATA --------
+# -------- LOAD DATA & CALCULATE METRICS --------
 df = pd.read_excel(excel_path)
-
-# -------- COMPUTE KAPPA METRICS --------
 comparison_names = []
 kappa_means = []
 kappa_errors = []
@@ -54,38 +65,44 @@ for col1, col2 in comparisons:
     kappa_means.append(mean_kappa)
     kappa_errors.append(std_kappa)
 
-# -------- PLOT --------
-fig, ax = plt.subplots(figsize=(10, 6))
+# -------- PLOT HORIZONTAL BARS --------
+fig, ax = plt.subplots(figsize=(12, 10))
 
-wrapped_labels = ['\n'.join(textwrap.wrap(name, width=25)) for name in comparison_names]
-hatch_styles = ['///', '\\\\', 'xxx']  # Visual distinction
-bar_colors = ['white'] * len(kappa_means)
+# Wrap long labels
+wrapped_labels = ['\n'.join(textwrap.wrap(name, width=50)) for name in comparison_names]
 
-bars = ax.bar(
+# Alternate colors for without/with history
+bar_colors = ['gold' if i % 2 == 0 else 'royalblue' for i in range(len(kappa_means))]
+
+# Draw bars with error bars
+bars = ax.barh(
     wrapped_labels,
     kappa_means,
-    yerr=kappa_errors,
-    capsize=10,
+    xerr=kappa_errors,
+    capsize=6,
     color=bar_colors,
-    edgecolor='black',
-    hatch=hatch_styles[:len(kappa_means)]
+    edgecolor='black'
 )
 
-ax.set_ylim(0, 1)
-ax.set_ylabel("Cohen Kappa")
-ax.set_title("Cohen Kappa Agreement with Error Bars")
-ax.yaxis.grid(True, linestyle='--', alpha=0.7)
-
+# Annotate values
 for bar, score in zip(bars, kappa_means):
-    height = bar.get_height()
+    width = bar.get_width()
     ax.text(
-        bar.get_x() + bar.get_width() / 2,
-        height + 0.02,
+        width + 0.015,
+        bar.get_y() + bar.get_height() / 2,
         f"{score:.2f}",
-        ha='center',
-        va='bottom',
-        fontsize=10
+        ha='left',
+        va='center',
+        fontsize=9
     )
 
-plt.tight_layout()
-plt.show()
+# Aesthetics
+ax.set_xlim(0, 1)
+ax.set_xlabel("Cohen Kappa", fontsize=12)
+ax.set_title("Cohen Kappa Agreement with Error Bars", fontsize=14)
+ax.set_yticklabels(wrapped_labels, fontsize=9)
+ax.xaxis.grid(True, linestyle='--', alpha=0.7)
+
+# Add legend
+legend_elements = [
+    Patch(facecolor='gold', edge
