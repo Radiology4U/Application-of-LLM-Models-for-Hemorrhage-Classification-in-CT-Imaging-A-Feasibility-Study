@@ -1,0 +1,10 @@
+pandas
+numpy
+scikit-learn
+openpyxl
+openai
+Pillow
+matplotlib
+seaborn
+python-dotenv
+textwrap3
