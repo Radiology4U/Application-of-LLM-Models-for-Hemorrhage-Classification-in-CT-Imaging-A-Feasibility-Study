@@ -27,8 +27,12 @@ comparisons = [
     ("Resident-2-with-medical history", "Radiologist Prediction"),
     ("Expert-without-medical history", "Radiologist Prediction"),
     ("Expert-with-medical history", "Radiologist Prediction"),
-    ("ChatGPT-without-medical history", "Radiologist Prediction"),
-    ("ChatGPT-with-medical history", "Radiologist Prediction"),
+    ("GPT-4o-without-medical history", "Radiologist Prediction"),
+    ("GPT-4o-with-medical history", "Radiologist Prediction"),
+    ("gemini-2.5-flash-without-medical history", "Radiologist Prediction"),
+    ("gemini-2.5-flash-with-medical history", "Radiologist Prediction"),
+    ("grok-4-fast-reasoning-without-medical history", "Radiologist Prediction"),
+    ("grok-4-fast-reasoning-with-medical history", "Radiologist Prediction"),
 ]
 
 label_set = [1, 2, 3, 4, 5]
