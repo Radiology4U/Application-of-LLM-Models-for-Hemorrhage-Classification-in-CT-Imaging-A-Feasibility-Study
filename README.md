@@ -1,6 +1,6 @@
-# 🧠 Application of GPT Models for Hemorrhage Classification in CT Imaging: A Feasibility Study
+# 🧠 Application of LLM Models for Hemorrhage Classification in CT Imaging: A Feasibility Study
 
-This repository investigates the potential of GPT models to assist in radiological decision-making by classifying CT scans for hemorrhage detection. The study simulates a realistic diagnostic setting, comparing GPT-based predictions with those of human raters at various levels of medical expertise.
+This project explores the use of advanced multimodal Large Language Models (LLMs) GPT-4o, Gemini 2.5 Flash, and Grok 4 Fast Reasoning to classify CT scan images for potential hemorrhage detection and generate diagnostic summaries. The goal is to evaluate the feasibility, consistency, and interpretability of LLM-driven image-based clinical reasoning.
 
 ---
 
@@ -31,7 +31,9 @@ These outputs were used to compute inter-rater agreement and confidence shifts a
 * 🩻 **2 Radiology Residents**
 * 🧠 **1 Head of Department (Expert)**
 * 🤖 **GPT-4o (ChatGPT)**
-
+* 🤖 **gemini-2.5-flash (Gemini)**
+* 🤖 **grok-4-fast-reasoning (Grok)**
+  
 ---
 
 ## 📈 Evaluation Metrics
@@ -57,7 +59,10 @@ These outputs were used to compute inter-rater agreement and confidence shifts a
 ```
 
 .
-├── chatgpt\_prediction.py         # Generates GPT-based predictions from CT images
+├── predictions/                        # Contains codes for getting predictions out of LLM's
+│   ├── GPT4o_prediction.py     
+│   └── gemini_prediction.py
+│   └── Grok_prediction.py                  
 ├── requirements.txt              # All required Python libraries
 ├── sample.env                    # Sample .env file for environment variables
 ├── plots/                        # Contains all plotting scripts
@@ -89,7 +94,9 @@ pip install -r requirements.txt
 Create a `.env` file based on `sample.env`:
 
 ```
-OPENAI_API_KEY=sk-...
+OPENAI_API_KEY=sk-your_openai_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
+GROK_API_KEY=your_grok_api_key_here
 EXCEL_PATH=/path/to/input_data.xlsx
 IMAGES_FOLDER=/path/to/ct_scans
 OUTPUT_FILE=/path/to/diagnosis_results.xlsx
@@ -97,8 +104,14 @@ OUTPUT_FILE=/path/to/diagnosis_results.xlsx
 
 ### ▶️ Step 4: Run Scripts
 
-* **Generate GPT predictions**
-  `python chatgpt_prediction.py`
+* **Generate GPT-4o predictions**  
+  `python GPT4o_prediction.py`
+
+* **Generate Gemini 2.5 Flash predictions**  
+  `python gemini_prediction.py`
+
+* **Generate Grok 4 Fast Reasoning predictions**  
+  `python Grok_prediction.py`
 
 * **Plot Cohen’s Kappa agreement**
   `python plots/cohen_kappa_plots.py`
@@ -139,7 +152,9 @@ OUTPUT_FILE=/path/to/diagnosis_results.xlsx
 Stored locally in `.env`:
 
 ```
-OPENAI_API_KEY=sk-...
+OPENAI_API_KEY=sk-your_openai_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
+GROK_API_KEY=your_grok_api_key_here
 EXCEL_PATH=/path/to/input_data.xlsx
 IMAGES_FOLDER=/path/to/ct_scans
 OUTPUT_FILE=/path/to/diagnosis_results.xlsx
@@ -152,7 +167,6 @@ OUTPUT_FILE=/path/to/diagnosis_results.xlsx
 * Dataset includes **47 patients**
 * Intended **for academic research only**
 * This is a feasibility study — **not for clinical use**
-* GPT-4o does not directly interpret images — predictions are made via structured prompts using metadata or textual imaging findings
 
 ---
 
