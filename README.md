@@ -6,7 +6,7 @@ This project explores the use of advanced multimodal Large Language Models (LLMs
 
 ## 📊 Study Overview
 
-A total of **47 patients** were included in this study. **8 human raters** and **GPT-4o** participated in the classification of head CT scans. Each participant reviewed scans **twice**:
+A total of **47 patients** were included in this study. **8 human raters** and **GPT-4o, Gemini 2.5 Flash, Grok 4 Fast Reasoning** participated in the classification of head CT scans. Each participant reviewed scans **twice**:
 
 1. **Without access to medical history**
 2. **With access to medical history**
@@ -105,13 +105,13 @@ OUTPUT_FILE=/path/to/diagnosis_results.xlsx
 ### ▶️ Step 4: Run Scripts
 
 * **Generate GPT-4o predictions**  
-  `python GPT4o_prediction.py`
+  `python predictions/GPT4o_prediction.py`
 
 * **Generate Gemini 2.5 Flash predictions**  
-  `python gemini_prediction.py`
+  `python predictions/gemini_prediction.py`
 
 * **Generate Grok 4 Fast Reasoning predictions**  
-  `python Grok_prediction.py`
+  `python predictions/Grok_prediction.py`
 
 * **Plot Cohen’s Kappa agreement**
   `python plots/cohen_kappa_plots.py`
