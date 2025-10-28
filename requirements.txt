@@ -2,9 +2,13 @@ pandas
 numpy
 scikit-learn
 openpyxl
-openai
-Pillow
+textwrap3
 matplotlib
 seaborn
+Pillow
 python-dotenv
-textwrap3
+openai
+google-generativeai
+requests
+tqdm
+tenacity
